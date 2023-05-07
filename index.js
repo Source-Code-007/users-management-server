@@ -29,8 +29,8 @@ async function run() {
         await client.connect();
 
         // Send a ping to confirm a successful connection
-        // await client.db("admin").command({ ping: 1 });
-        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        await client.db("admin").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
         const usersDatabase = client.db("usersDB").collection("users")
 
@@ -38,6 +38,12 @@ async function run() {
             const users = req.body
             const result = await usersDatabase.insertOne(users);
             console.log(users);
+            res.send(result)
+        })
+        
+        app.get('/users', async (req, res) => {
+            const cursor = usersDatabase.find({});
+            const result = await cursor.toArray();
             res.send(result)
         })
 
